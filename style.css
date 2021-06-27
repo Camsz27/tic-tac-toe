@@ -34,7 +34,7 @@ button {
   background-color: #c0fdfb;
   padding: 1rem;
   width: 90%;
-  border-radius: 3px;
+  border-radius: 10px;
 }
 
 button.active {
