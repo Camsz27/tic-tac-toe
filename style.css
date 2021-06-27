@@ -60,3 +60,27 @@ button.active {
   padding: 4rem;
   border: 5px solid black;
 }
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modalContent {
+  background-color: #c0fdfb;
+  margin: 20% 30%;
+  border: 3px solid;
+  text-align: center;
+  padding: 2rem;
+}
+
+#restartButton {
+  margin: 10% auto 5%;
+  width: 40%;
+  border: 3px solid black;
+}

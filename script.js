@@ -1,6 +1,7 @@
 const selectPlayer1 = document.querySelectorAll("button.player1");
 const selectPlayer2 = document.querySelectorAll("button.player2");
 const body = document.querySelector("body");
+const button = document.getElementById("try");
 
 console.log(selectPlayer1);
 console.log(selectPlayer2);
@@ -12,6 +13,25 @@ selectPlayer1.forEach((button) =>
 selectPlayer2.forEach((button) =>
   button.addEventListener("click", player2Select)
 );
+
+/* button.addEventListener("click", winningMessage); */
+
+/* function winningMessage() {
+  const div = document.createElement("div");
+  const container = document.createElement("div");
+  const text = document.createElement("h2");
+  const restartButton = document.createElement("button");
+  div.classList.add("modal");
+  container.classList.add("modalContent");
+  restartButton.textContent = "Restart Game";
+  restartButton.setAttribute("id", "restartButton");
+  restartButton.addEventListener("click", displayController.create);
+  text.textContent = "Player 1 is the Winner!!!";
+  container.append(text);
+  container.append(restartButton);
+  div.append(container);
+  body.append(div);
+} */
 
 function player1Select() {
   const branch = this.parentNode.parentNode;
@@ -102,6 +122,23 @@ const displayController = (() => {
     body.append(container);
   };
 
+  const winningMessage = () => {
+    const div = document.createElement("div");
+    const container = document.createElement("div");
+    const text = document.createElement("h2");
+    const restartButton = document.createElement("button");
+    div.classList.add("modal");
+    container.classList.add("modalContent");
+    restartButton.textContent = "Restart Game";
+    restartButton.setAttribute("id", "restartButton");
+    restartButton.addEventListener("click", displayController.create);
+    text.textContent = "Player 1 is the Winner!!!";
+    container.append(text);
+    container.append(restartButton);
+    div.append(container);
+    body.append(div);
+  };
+
   return { clear, create };
 })();
 
@@ -132,5 +169,10 @@ const gameBoard = (() => {
     body.append(boardContainer);
   };
 
-  return { create };
+  const clear = () => {
+    document.querySelector("#turnContainer").remove();
+    document.querySelector("#boardContainer").remove();
+  };
+
+  return { create, clear };
 })();
