@@ -41,3 +41,22 @@ button.active {
   transform: scale(1.1);
   border: 5px solid black;
 }
+
+#playerTurn {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.gameContainer {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  width: 30%;
+  margin: 0 auto;
+}
+
+.tile {
+  color: white;
+  padding: 4rem;
+  border: 5px solid black;
+}

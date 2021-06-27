@@ -1,5 +1,6 @@
 const selectPlayer1 = document.querySelectorAll("button.player1");
 const selectPlayer2 = document.querySelectorAll("button.player2");
+const body = document.querySelector("body");
 
 console.log(selectPlayer1);
 console.log(selectPlayer2);
@@ -54,7 +55,6 @@ const displayController = (() => {
   };
 
   const create = () => {
-    const body = document.querySelector("body");
     const container = document.createElement("div");
     const list1 = document.createElement("ul");
     const list2 = document.createElement("ul");
@@ -103,4 +103,34 @@ const displayController = (() => {
   };
 
   return { clear, create };
+})();
+
+const gameBoard = (() => {
+  const create = () => {
+    const turnContainer = document.createElement("div");
+    const boardContainer = document.createElement("div");
+    const playerTurn = document.createElement("h2");
+    const boardList = document.createElement("ul");
+
+    turnContainer.setAttribute("id", "turnContainer");
+    boardContainer.setAttribute("id", "boardContainer");
+    playerTurn.setAttribute("id", "playerTurn");
+    boardList.classList.add("gameContainer");
+
+    playerTurn.textContent = "Player 1's turn";
+    turnContainer.append(playerTurn);
+
+    for (let i = 0; i < 9; i++) {
+      const tile = document.createElement("li");
+      tile.classList.add("tile");
+      tile.setAttribute("id", i);
+      boardList.append(tile);
+    }
+    boardContainer.append(boardList);
+
+    body.append(turnContainer);
+    body.append(boardContainer);
+  };
+
+  return { create };
 })();
