@@ -1,0 +1,43 @@
+html {
+  background-color: white;
+  font-family: "Open Sans";
+  background: linear-gradient(to right, #2980b9, #6dd5fa);
+}
+
+h1 {
+  font-size: 4.5rem;
+  text-align: center;
+}
+
+.playerSelection {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+ul.playerOptions {
+  list-style: none;
+}
+
+.player {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.option {
+  font-size: 2rem;
+  margin: 1rem;
+  text-align: center;
+  font-family: "Open Sans";
+}
+
+button {
+  background-color: #c0fdfb;
+  padding: 1rem;
+  width: 90%;
+  border-radius: 3px;
+}
+
+button.active {
+  transform: scale(1.1);
+  border: 5px solid black;
+}
