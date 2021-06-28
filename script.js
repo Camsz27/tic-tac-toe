@@ -139,6 +139,7 @@ const gameBoard = (() => {
       const tile = document.createElement("li");
       tile.classList.add("tile");
       tile.setAttribute("id", i);
+      tile.addEventListener("click", mark);
       boardList.append(tile);
     }
     boardContainer.append(boardList);
@@ -152,7 +153,14 @@ const gameBoard = (() => {
     document.querySelector("#boardContainer").remove();
   };
 
-  return { create, clear };
+  const mark = (e) => {
+    const image = document.createElement("img");
+    image.setAttribute("src", "Images/close.png");
+    e.target.classList.add("x");
+    e.target.append(image);
+  };
+
+  return { create, clear, mark };
 })();
 
 const Player = (name, mark) => {

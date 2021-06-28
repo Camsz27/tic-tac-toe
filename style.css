@@ -51,13 +51,16 @@ button.active {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  width: 30%;
+  width: 35%;
   margin: 0 auto;
 }
 
 .tile {
   color: white;
-  padding: 4rem;
+  width: 8.62rem;
+  height: 8.62rem;
+  max-width: 8.62rem;
+  max-height: 8.62rem;
   border: 5px solid black;
 }
 
@@ -83,4 +86,10 @@ button.active {
   margin: 10% auto 5%;
   width: 40%;
   border: 3px solid black;
+}
+
+img {
+  position: relative;
+  top: 0.3rem;
+  left: 0.3rem;
 }
