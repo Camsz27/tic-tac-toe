@@ -186,6 +186,8 @@ const gameBoard = (() => {
     checkWon();
     turn++;
     e.target.append(image);
+    console.log(e.target);
+    e.target.removeEventListener("click", mark);
   };
 
   const checkWon = () => {
