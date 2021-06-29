@@ -265,3 +265,17 @@ const Player = (name, mark) => {
 };
 
 displayController.create();
+
+function possibleMoves() {
+  const tiles = document.querySelectorAll(".tile");
+  let moves = [];
+  for (let i = 0; i < 9; i++) {
+    if (
+      !tiles[i].classList.contains("x") &&
+      !tiles[i].classList.contains("o")
+    ) {
+      moves.push(tiles[i]);
+    }
+  }
+  return moves;
+}
