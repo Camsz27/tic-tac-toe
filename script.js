@@ -1,4 +1,6 @@
 const body = document.querySelector("body");
+let turn = 1;
+let tie = true;
 
 const displayController = (() => {
   const clear = () => {
@@ -66,12 +68,24 @@ const displayController = (() => {
     container.classList.add("modalContent");
     restartButton.textContent = "Restart Game";
     restartButton.setAttribute("id", "restartButton");
-    restartButton.addEventListener("click", displayController.create);
-    text.textContent = "Player 1 is the Winner!!!";
+    restartButton.addEventListener("click", create);
+    restartButton.addEventListener("click", gameBoard.clear);
+    restartButton.addEventListener("click", clearWinningMessage);
+    if (tie === true) {
+      text.textContent = "It is a Tie!!!";
+    } else if (turn % 2 === 0) {
+      text.textContent = "Player 2 is the Winner!!!";
+    } else {
+      text.textContent = "Player 1 is the Winner!!!";
+    }
     container.append(text);
     container.append(restartButton);
     div.append(container);
     body.append(div);
+  };
+
+  const clearWinningMessage = () => {
+    document.querySelector(".modal").remove();
   };
 
   const resetButtons = (branch) => {
@@ -114,7 +128,11 @@ const displayController = (() => {
 
   const changeTurnText = () => {
     const container = document.querySelector("#turnContainer");
-    container.firstChild.textContent = Player("Player1", "X").turnText();
+    if (turn % 2 !== 0) {
+      container.firstChild.textContent = Player("Player1", "X").turnText();
+    } else {
+      container.firstChild.textContent = Player("Player2", "O").turnText();
+    }
   };
 
   return { clear, create, winningMessage, changeTurnText };
@@ -122,6 +140,8 @@ const displayController = (() => {
 
 const gameBoard = (() => {
   const create = () => {
+    turn = 1;
+    tie = true;
     const turnContainer = document.createElement("div");
     const boardContainer = document.createElement("div");
     const playerTurn = document.createElement("h2");
@@ -132,7 +152,7 @@ const gameBoard = (() => {
     playerTurn.setAttribute("id", "playerTurn");
     boardList.classList.add("gameContainer");
 
-    playerTurn.textContent = "Player 1's turn";
+    playerTurn.textContent = "Player1's (X) turn";
     turnContainer.append(playerTurn);
 
     for (let i = 0; i < 9; i++) {
@@ -140,6 +160,7 @@ const gameBoard = (() => {
       tile.classList.add("tile");
       tile.setAttribute("id", i);
       tile.addEventListener("click", mark);
+      tile.addEventListener("click", displayController.changeTurnText);
       boardList.append(tile);
     }
     boardContainer.append(boardList);
@@ -155,9 +176,80 @@ const gameBoard = (() => {
 
   const mark = (e) => {
     const image = document.createElement("img");
-    image.setAttribute("src", "Images/close.png");
-    e.target.classList.add("x");
+    if (turn % 2 === 0) {
+      image.setAttribute("src", "Images/circle.png");
+      e.target.classList.add("o");
+    } else {
+      image.setAttribute("src", "Images/close.png");
+      e.target.classList.add("x");
+    }
+    checkWon();
+    turn++;
     e.target.append(image);
+  };
+
+  const checkWon = () => {
+    const mark = turn % 2 === 0 ? "o" : "x";
+    checkColumn(mark);
+    checkRow(mark);
+    checkDiagonal(mark);
+  };
+
+  const checkColumn = (sign) => {
+    const id = 0;
+    const tiles = document.querySelectorAll(".tile");
+    if (
+      (tiles[id].classList.contains(sign) &&
+        tiles[id + 3].classList.contains(sign) &&
+        tiles[id + 6].classList.contains(sign)) ||
+      (tiles[id + 1].classList.contains(sign) &&
+        tiles[id + 4].classList.contains(sign) &&
+        tiles[id + 7].classList.contains(sign)) ||
+      (tiles[id + 2].classList.contains(sign) &&
+        tiles[id + 5].classList.contains(sign) &&
+        tiles[id + 8].classList.contains(sign))
+    ) {
+      tie = false;
+      displayController.winningMessage();
+    }
+  };
+
+  const checkRow = (sign) => {
+    const id = 0;
+    const tiles = document.querySelectorAll(".tile");
+    if (
+      (tiles[id].classList.contains(sign) &&
+        tiles[id + 1].classList.contains(sign) &&
+        tiles[id + 2].classList.contains(sign)) ||
+      (tiles[id + 3].classList.contains(sign) &&
+        tiles[id + 4].classList.contains(sign) &&
+        tiles[id + 5].classList.contains(sign)) ||
+      (tiles[id + 6].classList.contains(sign) &&
+        tiles[id + 7].classList.contains(sign) &&
+        tiles[id + 8].classList.contains(sign))
+    ) {
+      tie = false;
+      displayController.winningMessage();
+    }
+  };
+
+  const checkDiagonal = (sign) => {
+    const id = 0;
+    const tiles = document.querySelectorAll(".tile");
+    if (
+      (tiles[id].classList.contains(sign) &&
+        tiles[id + 4].classList.contains(sign) &&
+        tiles[id + 8].classList.contains(sign)) ||
+      (tiles[id + 2].classList.contains(sign) &&
+        tiles[id + 4].classList.contains(sign) &&
+        tiles[id + 6].classList.contains(sign))
+    ) {
+      tie = false;
+      displayController.winningMessage();
+    }
+    if (turn === 9 && tie === true) {
+      displayController.winningMessage();
+    }
   };
 
   return { create, clear, mark };
