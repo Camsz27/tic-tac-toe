@@ -1,6 +1,7 @@
 const body = document.querySelector("body");
 let turn = 1;
 let tie = true;
+let aiPlayer = 0;
 
 const displayController = (() => {
   const clear = () => {
@@ -35,6 +36,7 @@ const displayController = (() => {
     buttonPlayer1Ai.classList.add("option", "player1");
     buttonPlayer1Ai.textContent = "AI";
     buttonPlayer1Ai.addEventListener("click", playerSelect);
+    buttonPlayer1Ai.addEventListener("click", computerPlay);
     humanItem1.append(buttonPlayer1Human);
     aiItem1.append(buttonPlayer1Ai);
     list1.append(player1Item, humanItem1, aiItem1);
@@ -51,6 +53,7 @@ const displayController = (() => {
     buttonPlayer2Ai.classList.add("option", "player2");
     buttonPlayer2Ai.textContent = "AI";
     buttonPlayer2Ai.addEventListener("click", playerSelect);
+    buttonPlayer2Ai.addEventListener("click", computerPlay);
     humanItem2.append(buttonPlayer2Human);
     aiItem2.append(buttonPlayer2Ai);
     list2.append(player2Item, humanItem2, aiItem2);
@@ -167,6 +170,11 @@ const gameBoard = (() => {
 
     body.append(turnContainer);
     body.append(boardContainer);
+    if (aiPlayer === 10) {
+      markComputer();
+      turn = 2;
+      displayController.changeTurnText();
+    }
   };
 
   const clear = () => {
@@ -186,8 +194,10 @@ const gameBoard = (() => {
     checkWon();
     turn++;
     e.target.append(image);
-    console.log(e.target);
     e.target.removeEventListener("click", mark);
+    if ((aiPlayer === 5 || aiPlayer === 10) && tie === true) {
+      markComputer();
+    }
   };
 
   const checkWon = () => {
@@ -195,6 +205,11 @@ const gameBoard = (() => {
     checkColumn(mark);
     checkRow(mark);
     checkDiagonal(mark);
+    if (tie === false) {
+      displayController.winningMessage();
+    } else if (turn === 9 && tie === true) {
+      displayController.winningMessage();
+    }
   };
 
   const checkColumn = (sign) => {
@@ -212,7 +227,6 @@ const gameBoard = (() => {
         tiles[id + 8].classList.contains(sign))
     ) {
       tie = false;
-      displayController.winningMessage();
     }
   };
 
@@ -231,7 +245,6 @@ const gameBoard = (() => {
         tiles[id + 8].classList.contains(sign))
     ) {
       tie = false;
-      displayController.winningMessage();
     }
   };
 
@@ -247,14 +260,18 @@ const gameBoard = (() => {
         tiles[id + 6].classList.contains(sign))
     ) {
       tie = false;
-      displayController.winningMessage();
-    }
-    if (turn === 9 && tie === true) {
-      displayController.winningMessage();
     }
   };
 
-  return { create, clear, mark };
+  return {
+    create,
+    clear,
+    mark,
+    checkColumn,
+    checkDiagonal,
+    checkRow,
+    checkWon,
+  };
 })();
 
 const Player = (name, mark) => {
@@ -278,4 +295,79 @@ function possibleMoves() {
     }
   }
   return moves;
+}
+
+function moveScore(turn, maximizing) {
+  const mark = turn % 2 === 0 ? "o" : "x";
+  let moves = possibleMoves();
+  let bestScore;
+  let bestTile;
+  if (maximizing) {
+    bestScore = -Infinity;
+  } else {
+    bestScore = Infinity;
+  }
+  if (moves === [] || tie === false || turn === 10) {
+    console.log("the end");
+    if (mark === "o" && tie === false) {
+      console.log("x has won");
+      score = 1;
+    } else if (mark === "x" && tie === false) {
+      console.log("o has won");
+      score = -1;
+    } else {
+      console.log("Tie");
+      score = 0;
+    }
+    tie = true;
+    return score;
+  }
+  for (let i = 0; i < moves.length; i++) {
+    console.log(mark);
+    console.log(tie);
+    console.log(turn);
+    console.log(moves);
+    console.group(moves[i]);
+    moves[i].classList.add(mark);
+    gameBoard.checkColumn(mark);
+    gameBoard.checkRow(mark);
+    gameBoard.checkDiagonal(mark);
+    if (maximizing) {
+      bestScore = Math.max(bestScore, moveScore(turn + 1, !maximizing));
+      bestTile = moves[i];
+    } else {
+      bestScore = Math.min(bestScore, moveScore(turn + 1, !maximizing));
+    }
+    moves[i].classList.remove(mark);
+  }
+  return [bestScore, bestTile];
+}
+
+function randomMove() {
+  const moves = possibleMoves();
+  return moves[Math.floor(Math.random() * moves.length)];
+}
+
+function markComputer() {
+  const image = document.createElement("img");
+  const move = randomMove();
+  if (turn % 2 === 0) {
+    image.setAttribute("src", "Images/circle.png");
+    move.classList.add("o");
+  } else {
+    image.setAttribute("src", "Images/close.png");
+    move.classList.add("x");
+  }
+  gameBoard.checkWon();
+  turn++;
+  move.append(image);
+  move.removeEventListener("click", gameBoard.mark);
+}
+
+function computerPlay(e) {
+  if (e.target.classList.contains("player2")) {
+    aiPlayer = 5;
+  } else if (e.target.classList.contains("player1")) {
+    aiPlayer = 10;
+  }
 }
