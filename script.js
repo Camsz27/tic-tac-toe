@@ -1,7 +1,9 @@
 const body = document.querySelector("body");
 let turn = 1;
 let tie = true;
-let aiPlayer = 0;
+let aiPlayer1 = 0;
+let aiPlayer2 = 0;
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const displayController = (() => {
   const clear = () => {
@@ -35,8 +37,8 @@ const displayController = (() => {
     buttonPlayer1Human.addEventListener("click", playerSelect);
     buttonPlayer1Ai.classList.add("option", "player1");
     buttonPlayer1Ai.textContent = "AI";
-    buttonPlayer1Ai.addEventListener("click", playerSelect);
     buttonPlayer1Ai.addEventListener("click", computerPlay);
+    buttonPlayer1Ai.addEventListener("click", playerSelect);
     humanItem1.append(buttonPlayer1Human);
     aiItem1.append(buttonPlayer1Ai);
     list1.append(player1Item, humanItem1, aiItem1);
@@ -52,8 +54,8 @@ const displayController = (() => {
     buttonPlayer2Human.addEventListener("click", playerSelect);
     buttonPlayer2Ai.classList.add("option", "player2");
     buttonPlayer2Ai.textContent = "AI";
-    buttonPlayer2Ai.addEventListener("click", playerSelect);
     buttonPlayer2Ai.addEventListener("click", computerPlay);
+    buttonPlayer2Ai.addEventListener("click", playerSelect);
     humanItem2.append(buttonPlayer2Human);
     aiItem2.append(buttonPlayer2Ai);
     list2.append(player2Item, humanItem2, aiItem2);
@@ -62,7 +64,7 @@ const displayController = (() => {
     body.append(container);
   };
 
-  const winningMessage = () => {
+  const winningMessage = async () => {
     const div = document.createElement("div");
     const container = document.createElement("div");
     const text = document.createElement("h2");
@@ -81,6 +83,9 @@ const displayController = (() => {
     } else {
       text.textContent = "Player 1 is the Winner!!!";
     }
+    aiPlayer1 = 0;
+    aiPlayer2 = 0;
+    await delay(500);
     container.append(text);
     container.append(restartButton);
     div.append(container);
@@ -170,7 +175,16 @@ const gameBoard = (() => {
 
     body.append(turnContainer);
     body.append(boardContainer);
-    if (aiPlayer === 10) {
+    console.log(aiPlayer1);
+    console.log(aiPlayer2);
+    console.log(aiPlayer1 === 10 && aiPlayer2 === 5);
+    if (aiPlayer1 === 10 && aiPlayer2 === 5) {
+      console.log("here");
+      while (tie === true && turn < 9) {
+        markComputer();
+      }
+    }
+    if (aiPlayer1 === 10) {
       markComputer();
       turn = 2;
       displayController.changeTurnText();
@@ -195,7 +209,7 @@ const gameBoard = (() => {
     turn++;
     e.target.append(image);
     e.target.removeEventListener("click", mark);
-    if ((aiPlayer === 5 || aiPlayer === 10) && tie === true) {
+    if ((aiPlayer2 === 5 || aiPlayer1 === 10) && tie === true) {
       markComputer();
     }
   };
@@ -365,9 +379,11 @@ function markComputer() {
 }
 
 function computerPlay(e) {
+  console.log("was pressed");
   if (e.target.classList.contains("player2")) {
-    aiPlayer = 5;
-  } else if (e.target.classList.contains("player1")) {
-    aiPlayer = 10;
+    aiPlayer2 = 5;
+  }
+  if (e.target.classList.contains("player1")) {
+    aiPlayer1 = 10;
   }
 }
